@@ -4,7 +4,7 @@
 
 The Chinese is the game's own official translation: **动物森林 (Dòngwù Sēnlín)**, released in 2006 for the iQue Player, China's version of the Nintendo 64. That release was the N64 original, Animal Forest; this project carries its text into the GameCube game, running on [flyngmt's PC port](https://github.com/flyngmt/ACGC-PC-Port).
 
-> **Work in progress.** Nothing is playable in Chinese yet. See [Progress](#progress).
+> **Work in progress.** The opening (the train ride and Tom Nook's welcome) shows in Chinese; the rest is English. See [Progress](#progress) and [the known issues](chinese/README.md#known-issues-from-the-first-play-test).
 
 ## What you need
 

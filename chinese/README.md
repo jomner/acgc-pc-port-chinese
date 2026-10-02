@@ -6,11 +6,28 @@ Nothing Chinese is in this repository. Like the port's game data, it comes from 
 
 ## Status
 
-- **Done:** `convert.py` builds the 11 glyph banks and writes every message in the game's byte format, each Chinese character as the new control code `7F 7B bank slot` (`0x7B` is the first code this port doesn't use; all 11,791 messages walk cleanly with it sized 4).
-- **Built and loading:** `pc/src/pc_zh.c` loads `chinese/out/` at startup; `mMsg_LoadMsgData` swaps in mapped messages; `mFont_CodeSize_get` sizes the new code; `mFontSentence_gppDraw_main` draws it through the normal character path with the bank texture in place of the font, 12 px wide.
-- **Next:** map Tom Nook's welcome and one villager conversation in `message-map.json`.
+**Proof of concept works.** On a new game, the mapped messages of the opening show in Chinese, drawn from the iQue's own glyphs, with no crash or freeze.
 
-**First goal (proof of concept):** those messages in Chinese, everything else in English.
+How it fits together:
+
+- `convert.py` builds the 11 glyph banks, writes every message in the game's byte format (each Chinese character as the new control code `7F 7B bank slot`; iQue line breaks `0x7D` become the GameCube's `0xCD`) and turns `message-map.json` into `zh_map.bin`.
+- `pc/src/pc_zh.c` loads `chinese/out/` at startup (`[ZH]` line with `--verbose`); `mMsg_LoadMsgData` swaps in mapped messages; `mFont_CodeSize_get` sizes the new code; `mFontSentence_gppDraw_main` draws it with the bank texture in place of the font; the text cursor (`m_msg_cursol.c_inc`) types it like an ordinary character.
+- `message-map.json`: 43 messages from the opening, matched by control-code skeleton (the sequence of pauses, choices and name inserts) against a play-through log. On this stretch the iQue number is the GameCube number minus one.
+- Mapping helper: while `chinese/log-messages` exists beside the game, every message it shows is appended to `chinese/seen.txt` with its number and text.
+
+## Known issues (from the first play-test)
+
+1. **Glyphs look rough.** Ragged edges and soft scaling: the iQue's 12×12 glyphs are drawn in the font's 12×16 cells and scaled with filtering. Try nearest-neighbour filtering for the bank textures, check the cell offset (`TOP` in `convert.py`), or upscale the glyphs when converting.
+2. **No speech sound (Animalese) on Chinese text.** The voice is chosen per character from the letter; a Chinese glyph has no letter. Give each glyph a sound, e.g. from its pinyin.
+3. **The player's answers in choice boxes stay English.** Choices are separate strings, not mapped yet.
+4. **Some lines stay English.** Rover's first lines (e.g. 10950, 10952) and a few others matched weakly and were left out; review them.
+5. **Character names stay English.** Names come from separate name tables, not messages; the iQue's are in files 1885–1899, still to be decoded.
+
+## Next steps
+
+1. Fix 1 and 2 (look and sound).
+2. Map choices (3), the weak matches (4) and names (5).
+3. Map automatically: line up the Japanese N64 text (numbered like the iQue's) with the Japanese GameCube text, instead of play-through logs.
 
 ## Plan
 
