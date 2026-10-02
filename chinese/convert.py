@@ -7,10 +7,9 @@ Writes chinese/out/ (git-ignored; it stays on your machine):
   zh_banks.bin      the glyphs the script uses, packed into banks shaped like this
                     game's own font: each bank a 192x256 4-bit (I4) texture, 16x16
                     cells of 12x16 px, in the GameCube's 8x8 tiles; 24,576 bytes each
-  zh_msg.bin        every message re-encoded as 16-bit little-endian characters, as
-                    Dobutsu no Mori e+'s wide text: top byte 0 = a control-code or
-                    line-break byte, top byte N = glyph (low byte) in bank N (1-based)
-  zh_msg_index.bin  little-endian u32 end offset of each message, in characters
+  zh_msg.bin        every message in this game's own byte format, with each Chinese
+                    character as a new control code: 7F 7B bank slot (bank 1-based)
+  zh_msg_index.bin  little-endian u32 end offset of each message in zh_msg.bin
 
 Format details and the code -> character table: https://github.com/jomner/dongwu-senlin-text
 """
@@ -20,6 +19,7 @@ FILE_TABLE = 0x21D80
 MSG_DATA, MSG_INDEX, FONT_FILE, FONT_OFFSET = 1883, 1884, 1882, 0x128
 CELL_W, CELL_H, GLYPH = 12, 16, 12   # bank cell, and the iQue glyph inside it
 TOP = 2                              # rows above the 12-row glyph in its 16-row cell
+ZH_GLYPH = 0x7B                      # new control code: 7F 7B bank slot (the game's table ends at 0x7A)
 
 # Control code sizes (0x7F, code, arguments), from ac-decomp's mFont_cont_info_tbl.
 CONT_SIZES = ([2, 2, 2, 3, 2, 5, 2, 2, 5, 5, 5, 5, 5, 2, 4, 4, 4, 4, 4, 6, 8, 10, 6, 8, 10]
@@ -94,9 +94,8 @@ def main(path):
     text, offsets = bytearray(), []
     for msg in messages:
         for kind, v in msg:
-            hi, lo = place[v] if kind == "glyph" else (0, v)
-            text += struct.pack("<H", hi << 8 | lo)
-        offsets.append(len(text) // 2)
+            text += bytes([0x7F, ZH_GLYPH, *place[v]]) if kind == "glyph" else bytes([v])
+        offsets.append(len(text))
 
     out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out")
     os.makedirs(out, exist_ok=True)

@@ -6,7 +6,7 @@ Nothing Chinese is in this repository. Like the port's game data, it comes from 
 
 ## Status
 
-Step 4 of the plan is done: `convert.py` builds the glyph banks and the re-encoded messages. The port doesn't use them yet.
+The converter is done: `convert.py` builds the glyph banks and writes every message in this game's byte format, each Chinese character as the new control code `7F 7B bank slot` (`0x7B` is the first code this port doesn't use). All 11,791 messages walk cleanly with that code sized 4. The port doesn't use the output yet.
 
 **First goal (proof of concept):** Tom Nook's intro and one villager conversation in Chinese, everything else in English.
 
