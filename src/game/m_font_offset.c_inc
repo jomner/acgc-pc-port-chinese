@@ -18,5 +18,10 @@ static int mFont_Get_FontOffset(u8 c) {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
   };
 
+#ifdef TARGET_PC
+  if (mFont_zh_tex != NULL) {
+    return 0; /* Chinese glyphs fill their 12 px cell */
+  }
+#endif
   return offset_data[c];
 }

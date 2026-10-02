@@ -14,6 +14,9 @@
 #include "libc64/math64.h"
 #ifdef TARGET_PC
 #include "pc_zh.h"
+
+/* While a Chinese glyph is drawn: its bank texture, in place of the font. */
+static u8* mFont_zh_tex = NULL;
 #endif
 #include "libultra/libultra.h"
 

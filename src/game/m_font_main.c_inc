@@ -1,4 +1,9 @@
 static u8* mFont_Get_FontTex_p() {
+#ifdef TARGET_PC
+  if (mFont_zh_tex != NULL) {
+    return mFont_zh_tex;
+  }
+#endif
   return FONT_nes_tex_font1;
 }
 
@@ -1062,6 +1067,34 @@ static void mFontSentence_gppDraw_main(mFontSentence* this, GAME* game, Gfx** gf
 
   this->character.char_p = char_p;
   this->character.len = char_size;
+
+#ifdef TARGET_PC
+  /* Chinese glyph (7F 7B bank slot): draw slot through the normal character path,
+   * with the font texture swapped for the bank's. Checked before the control-code
+   * tables, which end before 0x7B. */
+  if (c == CHAR_CONTROL_CODE && char_p[1] == PC_ZH_GLYPH_CODE) {
+    mFont_zh_tex = (u8*)pc_zh_bank(char_p[2]);
+
+    if (mFont_zh_tex != NULL) {
+      this->character.char_p = &char_p[3];
+      this->character.len = 1;
+      this->character.position.x = this->position.x + this->width;
+      mFontChar_total_scale_reset(&this->character, this);
+      mFontChar_gppDraw(&this->character, graph, gfx_pp);
+
+      if ((this->flags & mFont_SENTENCE_FLAG_VOICE_SE) && this->now_idx == this->se_pos) {
+        mFontSentence_animal_voice_se(this);
+      }
+
+      this->width += this->character.width;
+      mFont_zh_tex = NULL;
+      mFontChar_gppDraw_sentence_restore(&this->character, this, gfx_pp);
+    }
+
+    this->now_idx += char_size;
+    return;
+  }
+#endif
 
   if (c == CHAR_CONTROL_CODE) {
     int next = *(char_p + 1);
