@@ -28,7 +28,7 @@ Without `chinese/out/`, the game runs exactly as the PC port does.
 - [x] Convert them into a form the port can use
 - [x] Load them at startup, swap in mapped messages, draw the glyphs
 - [x] Build: compiles cleanly with MSYS2 MINGW32 and loads all 11,791 messages and 11 glyph banks at startup (run with `--verbose` to see the `[ZH]` line)
-- [ ] Match the first messages: Tom Nook's welcome and one villager conversation
+- [x] Match the first messages: 43 from the opening (train ride, Tom Nook's welcome, first job), by control-code skeleton
 - [ ] Match messages automatically, through the Japanese versions of both games
 
 The GameCube game has far more text than the N64 original (the island, NES games, new characters), so text the iQue release never had will stay in English.
