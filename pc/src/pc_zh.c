@@ -91,6 +91,39 @@ const unsigned char* pc_zh_message(int gc_no, unsigned int* size) {
     return NULL;
 }
 
+void pc_zh_log_message(int gc_no, const unsigned char* data, unsigned int size) {
+    static int checked, logging;
+    FILE* f;
+    unsigned int i;
+
+    if (!checked) {
+        f = fopen("chinese/log-messages", "rb");
+        logging = f != NULL;
+        if (f != NULL) {
+            fclose(f);
+        }
+        checked = 1;
+    }
+    if (!logging || (f = fopen("chinese/seen.txt", "a")) == NULL) {
+        return;
+    }
+    fprintf(f, "%d\t", gc_no);
+    for (i = 0; i < size; i++) {
+        unsigned char c = data[i];
+
+        if (c == 0x7F && i + 1 < size) { /* control code: show its number */
+            fprintf(f, "{%02X}", data[i + 1]);
+            i++;
+        } else if (c == 0xCD) {
+            fputc('/', f); /* new line */
+        } else {
+            fputc(c >= 0x20 && c < 0x7F ? c : '.', f);
+        }
+    }
+    fputc('\n', f);
+    fclose(f);
+}
+
 const unsigned char* pc_zh_bank(int bank) {
     if (!zh_active || bank < 1 || (unsigned int)bank > zh_bank_count) {
         return NULL;

@@ -364,6 +364,8 @@ static int mMsg_LoadMsgData(mMsg_Data_c* msg_data, int index, int cut) {
                 }
             }
 
+            pc_zh_log_message(index, msg_data->text_buf.data, size);
+
             /* Chinese: the iQue version of this message, if chinese/message-map.json maps it. */
             {
                 unsigned int zh_size;

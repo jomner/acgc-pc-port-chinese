@@ -19,4 +19,8 @@ const unsigned char* pc_zh_message(int gc_no, unsigned int* size);
 /* Glyph bank (1-based), or NULL. */
 const unsigned char* pc_zh_bank(int bank);
 
+/* While chinese/log-messages exists, appends each message the game loads
+ * (number and readable text) to chinese/seen.txt, for mapping messages. */
+void pc_zh_log_message(int gc_no, const unsigned char* data, unsigned int size);
+
 #endif

@@ -21,6 +21,7 @@ MSG_DATA, MSG_INDEX, FONT_FILE, FONT_OFFSET = 1883, 1884, 1882, 0x128
 CELL_W, CELL_H, GLYPH = 12, 16, 12   # bank cell, and the iQue glyph inside it
 TOP = 2                              # rows above the 12-row glyph in its 16-row cell
 ZH_GLYPH = 0x7B                      # new control code: 7F 7B bank slot (the game's table ends at 0x7A)
+GC_NEW_LINE = 0xCD                   # line break here; the iQue's is 0x7D, an ordinary character on the GameCube
 
 # Control code sizes (0x7F, code, arguments), from ac-decomp's mFont_cont_info_tbl.
 CONT_SIZES = ([2, 2, 2, 3, 2, 5, 2, 2, 5, 5, 5, 5, 5, 2, 4, 4, 4, 4, 4, 6, 8, 10, 6, 8, 10]
@@ -43,7 +44,7 @@ def parse(data, start, end):
             out += [("byte", x) for x in data[i:i + size]]
             i += size
         elif b == 0x7D:
-            out.append(("byte", b)); i += 1
+            out.append(("byte", GC_NEW_LINE)); i += 1
         elif b >= 0x80:
             out.append(("glyph", ((data[i + 1] << 7) | (b & 0x7F)) + 128)); i += 2
         else:
