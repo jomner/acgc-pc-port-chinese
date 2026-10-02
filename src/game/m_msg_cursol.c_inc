@@ -1169,7 +1169,14 @@ static int mMsg_Main_Cursol_ControlCursol(mMsg_Window_c* msg_p) {
       else if (code == CHAR_MESSAGE_TAG) {
         idx += mMsg_Set_SizeCode(msg_p, idx);
       }
+#ifdef TARGET_PC
+      /* A Chinese glyph (7F 7B bank slot) is typed like an ordinary character, below:
+       * the control-code handlers end before 0x7B and would leave the cursor stuck on it. */
+      else if (mMsg_Main_Cursol_Check_ControlCursol(msg_p, idx) &&
+               msg_p->msg_data->text_buf.data[idx + 1] != PC_ZH_GLYPH_CODE) {
+#else
       else if (mMsg_Main_Cursol_Check_ControlCursol(msg_p, idx)) {
+#endif
         int proc_res = mMsg_Main_Cursol_Proc_ControlCursol(msg_p, &idx);
 
         if (proc_res == mMsg_RESULT_FALSE) {
