@@ -26,8 +26,8 @@ Without `chinese/out/`, the game runs exactly as the PC port does.
 
 - [x] Read the Chinese script and font from the iQue ROM ([dongwu-senlin-text](https://github.com/jomner/dongwu-senlin-text))
 - [x] Convert them into a form the port can use
-- [x] Load them at startup, swap in mapped messages, draw the glyphs (written, not yet built)
-- [ ] Build and fix
+- [x] Load them at startup, swap in mapped messages, draw the glyphs
+- [x] Build: compiles cleanly with MSYS2 MINGW32 and loads all 11,791 messages and 11 glyph banks at startup (run with `--verbose` to see the `[ZH]` line)
 - [ ] Match the first messages: Tom Nook's welcome and one villager conversation
 - [ ] Match messages automatically, through the Japanese versions of both games
 

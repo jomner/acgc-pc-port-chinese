@@ -7,8 +7,8 @@ Nothing Chinese is in this repository. Like the port's game data, it comes from 
 ## Status
 
 - **Done:** `convert.py` builds the 11 glyph banks and writes every message in the game's byte format, each Chinese character as the new control code `7F 7B bank slot` (`0x7B` is the first code this port doesn't use; all 11,791 messages walk cleanly with it sized 4).
-- **Written, not yet built:** `pc/src/pc_zh.c` loads `chinese/out/` at startup; `mMsg_LoadMsgData` swaps in mapped messages; `mFont_CodeSize_get` sizes the new code; `mFontSentence_gppDraw_main` draws it through the normal character path with the bank texture in place of the font, 12 px wide.
-- **Next:** build and fix; map Tom Nook's welcome and one villager conversation in `message-map.json`.
+- **Built and loading:** `pc/src/pc_zh.c` loads `chinese/out/` at startup; `mMsg_LoadMsgData` swaps in mapped messages; `mFont_CodeSize_get` sizes the new code; `mFontSentence_gppDraw_main` draws it through the normal character path with the bank texture in place of the font, 12 px wide.
+- **Next:** map Tom Nook's welcome and one villager conversation in `message-map.json`.
 
 **First goal (proof of concept):** those messages in Chinese, everything else in English.
 
