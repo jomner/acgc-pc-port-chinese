@@ -363,6 +363,18 @@ static int mMsg_LoadMsgData(mMsg_Data_c* msg_data, int index, int cut) {
                     }
                 }
             }
+
+            /* Chinese: the iQue version of this message, if chinese/message-map.json maps it. */
+            {
+                unsigned int zh_size;
+                const unsigned char* zh = pc_zh_message(index, &zh_size);
+
+                if (zh != NULL && zh_size <= mMsg_MSG_BUF_MAX) {
+                    for (i = 0; i < (int)zh_size; i++) {
+                        msg_data->text_buf.data[i] = zh[i];
+                    }
+                }
+            }
 #endif
 
             msg_data->msg_no = index;

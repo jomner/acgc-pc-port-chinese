@@ -6,6 +6,7 @@
 #include "pc_keybindings.h"
 #include "pc_assets.h"
 #include "pc_disc.h"
+#include "pc_zh.h"
 #include "pc_typing.h"
 #include "pc_pause_menu.h"
 #include "pc_settings_menu.h"
@@ -384,6 +385,7 @@ int main(int argc, char* argv[]) {
     pc_keybindings_load();
     pc_platform_init();
     pc_disc_init();
+    pc_zh_init();
     if (!pc_assets_init()) {
         const char* msg =
             "No game data found.\n\n"

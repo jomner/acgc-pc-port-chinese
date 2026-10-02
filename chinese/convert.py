@@ -10,10 +10,11 @@ Writes chinese/out/ (git-ignored; it stays on your machine):
   zh_msg.bin        every message in this game's own byte format, with each Chinese
                     character as a new control code: 7F 7B bank slot (bank 1-based)
   zh_msg_index.bin  little-endian u32 end offset of each message in zh_msg.bin
+  zh_map.bin        message-map.json as little-endian u32 pairs: GameCube message, iQue message
 
 Format details and the code -> character table: https://github.com/jomner/dongwu-senlin-text
 """
-import os, struct, sys, zlib
+import json, os, struct, sys, zlib
 
 FILE_TABLE = 0x21D80
 MSG_DATA, MSG_INDEX, FONT_FILE, FONT_OFFSET = 1883, 1884, 1882, 0x128
@@ -105,6 +106,9 @@ def main(path):
     open(os.path.join(out, "zh_banks.bin"), "wb").write(b"".join(bank_texture(font, b) for b in banks))
     open(os.path.join(out, "zh_msg.bin"), "wb").write(text)
     open(os.path.join(out, "zh_msg_index.bin"), "wb").write(struct.pack(f"<{len(offsets)}I", *offsets))
+    pairs = json.load(open(os.path.join(os.path.dirname(out), "message-map.json"), encoding="utf-8"))["map"]
+    open(os.path.join(out, "zh_map.bin"), "wb").write(
+        b"".join(struct.pack("<2I", int(gc), int(iq)) for gc, iq in pairs.items()))
     print(f"{len(messages)} messages, {len(used)} characters in {len(banks)} banks, written to {out}")
 
 

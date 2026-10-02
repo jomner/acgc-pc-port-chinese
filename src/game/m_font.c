@@ -12,6 +12,9 @@
 #include "MSL_C/w_math.h"
 #include "m_rcp.h"
 #include "libc64/math64.h"
+#ifdef TARGET_PC
+#include "pc_zh.h"
+#endif
 #include "libultra/libultra.h"
 
 #define mFont_CC_FONT 0, 0, 0, PRIMITIVE, PRIMITIVE, 0, TEXEL0, 0

@@ -175,6 +175,11 @@ extern int mFont_CodeSize_get(u8* str) {
     if (c1 >= 0 && c1 < mFont_CONT_CODE_NUM) {
       size = mFont_cont_info_tbl[c1].size;
     }
+#ifdef TARGET_PC
+    else if (c1 == PC_ZH_GLYPH_CODE) {
+      size = PC_ZH_GLYPH_CODE_SIZE; /* Chinese glyph: 7F 7B bank slot */
+    }
+#endif
     else {
       size = 2;
     }
